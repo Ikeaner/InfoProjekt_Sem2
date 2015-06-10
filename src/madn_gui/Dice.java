@@ -10,32 +10,48 @@ public class Dice extends JButton
 {
 	private int numberRolled;
 	
-	public Dice(madn_app.Dice d)
+	public Dice()
 	{
-		madn_app.Dice dice = d;
-		this.setEnabled(true);
-		this.setText("1");
+		enableDice();
+		this.setText("NULL");
 		this.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent arg0) 
 			{
-				numberRolled = dice.roll();
+				numberRolled = madn_app.Dice.roll();
 				setText(Integer.toString(numberRolled));
 				save();
-				dice.setDiceRolled(true);
-				disableDice();
+				update();
 			}
 		});
-	}
-	
-	private void disableDice()
-	{
-		setEnabled(false);
 	}
 	
 	public void save()
 	{
 		madn_ctrl.Dice.setNumberRolled(numberRolled);
+		madn_ctrl.Dice.setDiceRolled(true);
+	}
+	
+	public void update()
+	{
+		if (madn_ctrl.Dice.isDiceRolled())
+		{
+			disableDice();
+		}
+		else
+		{
+			enableDice();
+		}
+	}
+	
+	public void enableDice()
+	{
+		setEnabled(true);
+	}
+	
+	private void disableDice()
+	{
+		setEnabled(false);
 	}
 }

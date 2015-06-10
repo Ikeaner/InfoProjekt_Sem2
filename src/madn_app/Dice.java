@@ -9,22 +9,10 @@ package madn_app;
 
 //returns a random number between 1 and 6
 public class Dice 
-{
-	private boolean diceRolled = false;
-	
-	public int roll()
+{	
+	public static int roll()
 	{
 		int zahl = (int)(6*Math.random()+1);
 		return zahl;
-	}
-
-	public boolean isDiceRolled() 
-	{
-		return diceRolled;
-	}
-
-	public void setDiceRolled(boolean diceRolled) 
-	{
-		this.diceRolled = diceRolled;
 	}
 }

@@ -22,6 +22,6 @@ public class PlayerList
 	
 	public void addPlayer(Player p)
 	{
-		players.add(p);
+		this.players.add(p);
 	}
 }

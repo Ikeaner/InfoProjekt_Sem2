@@ -13,9 +13,11 @@ public class Game
 	private Player p2;
 	private Player p3;
 	private Player p4;
-	private PlayerList players;
+	private PlayerList players = new PlayerList();
 	
 	private Player currentPlayer;
+	
+	Dice d = new Dice();
 	
 	private boolean gameOver = false;
 	
@@ -33,11 +35,12 @@ public class Game
 		p2 = new Player("CPU Tam", 2, false);
 		p3 = new Player("CPU Leno", 3, false);
 		p4 = new Player("CPU Jaceu", 4, false);
-		
+
 		players.addPlayer(p1);
 		players.addPlayer(p2);
 		players.addPlayer(p3);
 		players.addPlayer(p4);	
+		
 	}
 	
 	private void initializeTokens()
@@ -61,6 +64,30 @@ public class Game
 		
 		while (gameOver == false)
 		{
+			System.out.println("The Current Players is: " + currentPlayer.getName());
+			
+			boolean isValid = false;
+			while (isValid == false)
+			{
+				madn_ctrl.Dice.setDiceRolled(false);
+				view.update(this);
+
+				//auf Wurf warten
+				//Disable Dice (automatisch?)
+				//gewürfelte Zahl prüfen
+				
+				//if gewürfelte Zahl bringt ergebnisse
+					isValid = true;	
+				//else
+					//3mal?
+			}
+			
+			//enable Felder auf die man Ziehen kann
+			
+			//if irgendein Haus = voll
+				//gameOver = true;
+			//else
+			
 			//Zug übergeben
 			if (currentPlayer.getID() == 4)
 			{
@@ -71,9 +98,10 @@ public class Game
 				currentPlayer = players.getPlayers().get(currentPlayer.getID()+1);
 			}
 			
+			//gameOver = true;
 			view.update(this);
-			//TODO: Rest des Spiels
 		}
 		
+		//zeige Endscreen
 	}
 }

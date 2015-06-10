@@ -1,50 +1,48 @@
 package madn_app;
 
-import java.util.ArrayList;
+import madn_ctrl.Player;
+import madn_ctrl.PlayerList;
+import madn_ctrl.Token;
+import madn_gui.View;
 
 public class Game 
 {
-	private Dice dice;
+	private View view;
 	
 	private Player p1;
 	private Player p2;
 	private Player p3;
 	private Player p4;
-	private ArrayList<Player> players = new ArrayList<Player>();
+	private PlayerList players;
 	
 	private Player currentPlayer;
 	
 	private boolean gameOver = false;
 	
-	public Game(int i, Dice d)
+	public Game(View view)
 	{
-		dice = d;
-		if (i == 4)
-		{
-			initGame4Players();
-			initializeTokens();
-			startGame();
-		}
+		this.view = view;
+		initGame4Players();
+		initializeTokens();
+		startGame();
 	}
 	
 	private void initGame4Players()
 	{
+		p1 = new Player("Spieler", 1, true);
+		p2 = new Player("CPU Tam", 2, false);
+		p3 = new Player("CPU Leno", 3, false);
+		p4 = new Player("CPU Jaceu", 4, false);
 		
-		p1 = new Player("Hans", 1);
-		p2 = new Player("Tam", 2);
-		p3 = new Player("Leno", 3);
-		p4 = new Player("Jaceu", 4);
-		
-		players.add(p1);
-		players.add(p2);
-		players.add(p3);
-		players.add(p4);
-		
+		players.addPlayer(p1);
+		players.addPlayer(p2);
+		players.addPlayer(p3);
+		players.addPlayer(p4);	
 	}
 	
 	private void initializeTokens()
 	{
-		for (Player p : players)
+		for (Player p : players.getPlayers())
 		{
 			for (int i = 0; i < 4; i++)
 			{
@@ -58,7 +56,7 @@ public class Game
 		//Random Player TODO: Auswürfeln
 		int startPlayerInt = (int) (Math.random()*4);
 		
-		currentPlayer = players.get(startPlayerInt);
+		currentPlayer = players.getPlayers().get(startPlayerInt);
 		System.out.println("Starting Player is: " + currentPlayer.getName());
 		
 		while (gameOver == false)
@@ -66,13 +64,14 @@ public class Game
 			//Zug übergeben
 			if (currentPlayer.getID() == 4)
 			{
-				currentPlayer = players.get(1);
+				currentPlayer = players.getPlayers().get(1);
 			}
 			else
 			{
-				currentPlayer = players.get(currentPlayer.getID()+1);
+				currentPlayer = players.getPlayers().get(currentPlayer.getID()+1);
 			}
 			
+			view.update(this);
 			//TODO: Rest des Spiels
 		}
 		

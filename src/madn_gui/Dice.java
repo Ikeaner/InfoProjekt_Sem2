@@ -8,6 +8,8 @@ import javax.swing.JButton;
 @SuppressWarnings("serial")
 public class Dice extends JButton
 {
+	private int numberRolled;
+	
 	public Dice(madn_app.Dice d)
 	{
 		madn_app.Dice dice = d;
@@ -18,8 +20,9 @@ public class Dice extends JButton
 			@Override
 			public void actionPerformed(ActionEvent arg0) 
 			{
-				int numberRolled = dice.roll();
+				numberRolled = dice.roll();
 				setText(Integer.toString(numberRolled));
+				save();
 				dice.setDiceRolled(true);
 				disableDice();
 			}
@@ -29,5 +32,10 @@ public class Dice extends JButton
 	private void disableDice()
 	{
 		setEnabled(false);
+	}
+	
+	public void save()
+	{
+		madn_ctrl.Dice.setNumberRolled(numberRolled);
 	}
 }

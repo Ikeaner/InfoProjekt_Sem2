@@ -10,9 +10,10 @@ public class View
 	
 	public View()
 	{
-		JFrame mainframe = new JFrame("MADN");
+		JFrame mainframe = new JFrame("Mensch Ärgere Dich Nicht");
+		mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		mainframe.setSize(500,500);
+		mainframe.setSize(1024, 780);
 		d = new Dice();
 		mainframe.add(d);
 		
@@ -21,6 +22,7 @@ public class View
 	
 	public void update(final Game game)
 	{
+		System.out.println("update");
 		d.update();
 	}
 }

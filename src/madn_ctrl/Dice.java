@@ -5,7 +5,6 @@ public class Dice
 	private static int numberRolled;
 	private static boolean diceRolled;
 	
-	
 	public static int getNumberRolled() 
 	{
 		return numberRolled;

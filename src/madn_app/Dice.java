@@ -10,9 +10,10 @@ package madn_app;
 //returns a random number between 1 and 6
 public class Dice 
 {	
-	public static int roll()
+	public static void roll()
 	{
 		int zahl = (int)(6*Math.random()+1);
-		return zahl;
+		madn_ctrl.Dice.setNumberRolled(zahl);
+		madn_ctrl.Dice.setDiceRolled(true);
 	}
 }

@@ -1,8 +1,10 @@
 package madn_app;
 
+import madn_ctrl.Board;
 import madn_ctrl.Player;
 import madn_ctrl.PlayerList;
 import madn_ctrl.Token;
+import madn_ctrl.allTokens;
 import madn_gui.View;
 
 public class Game 
@@ -16,6 +18,9 @@ public class Game
 	private PlayerList players = new PlayerList();
 	
 	private Player currentPlayer;
+	private Board board = new Board();
+	
+	private boolean rollAgain;
 	
 	Dice d = new Dice();
 	
@@ -40,7 +45,6 @@ public class Game
 		players.addPlayer(p2);
 		players.addPlayer(p3);
 		players.addPlayer(p4);	
-		
 	}
 	
 	private void initializeTokens()
@@ -58,7 +62,7 @@ public class Game
 	{	
 		//Random Player KANN TODO: Auswürfeln
 		int startPlayerInt = (int) (Math.random()*4);
-		
+		//set current Player to the Starting Player
 		currentPlayer = players.getPlayers().get(startPlayerInt);
 		System.out.println("Starting Player is: " + currentPlayer.getName());
 		
@@ -67,8 +71,10 @@ public class Game
 		{
 			System.out.println("The Current Players is: " + currentPlayer.getName());
 			
-			boolean isValid = false;
-			while (isValid == false)
+			//Turn Loop
+			rollAgain = true;
+			int failureCounter = 0;
+			while (rollAgain == true)
 			{
 				madn_ctrl.Dice.setDiceRolled(false);
 				view.update(this);
@@ -87,17 +93,79 @@ public class Game
 				}				
 				System.out.println("Die gewürfelte Zahl ist " + madn_ctrl.Dice.getNumberRolled());
 				
-				//if gewürfelte Zahl bringt ergebnisse
-					isValid = true;	
-				//else
-					//3mal?
+					if (madn_ctrl.Dice.getNumberRolled() != 6)
+					{
+						if (areThereTokensOutOfStart() == true)
+						{
+							checkTurn();
+							rollAgain = false;
+						}
+						else 
+						{
+							failureCounter++;
+							//roll again
+						}
+					}
+					else if (madn_ctrl.Dice.getNumberRolled() == 6)
+					{
+						if(areThereTokensOutOfStart())
+						{
+							checkTurn();
+						}
+						else
+						{
+							if (currentPlayer.getStartField().isEmpty())
+							{
+								//force Move out of Starting Position
+								for (int i:currentPlayer.getStartingPositions())
+								{
+									if (board.getFieldAt(i).containsToken())
+									{
+										board.getFieldAt(i).getTokenOnField().enableToken();
+									}
+								}
+							}
+							else
+							{
+								if(board.getFieldAt(currentPlayer.getStartField().getID() + 6).containsFriendlyToken(currentPlayer))
+								{
+									//DO NOTHING AND ROLL AGAIN
+								}
+								else
+								{
+									//Force Move to Field
+									currentPlayer.getStartField().getTokenOnField().enableToken();
+								}
+							}
+						}
+					}
+				
+					if (failureCounter < 2)
+					{
+						rollAgain = false;
+					}
+					//if out of all tokens any are enabled wait for Token to be moved else end turn
+					if(isAnyTokenEnabled())
+					{
+						allTokens.setTokenMoved(false);
+						view.update(this);
+						//Wait for Token to be moved
+						while (madn_ctrl.allTokens.wasTokenMoved() == false)
+						{
+							try 
+							{
+						       Thread.sleep(200);
+							} 
+							catch(InterruptedException e) 
+							{
+								e.printStackTrace();
+							}
+						}	
+					}	
 			}
-			//enable Felder auf die man Ziehen kann
-			
 			//if irgendein Haus = voll
 				//gameOver = true;
 			//else
-			
 			//Zug übergeben
 			if (currentPlayer.getID() == 3)
 			{
@@ -111,5 +179,55 @@ public class Game
 		}
 		
 		//zeige Endscreen
+	}
+	
+	private void checkTurn()
+	{
+		for (Token t:currentPlayer.getTokens())
+		{
+			for (int i:currentPlayer.getStartingPositions())
+			{
+				if (t.getPosition() != i)
+		  		{
+		  			if (board.getFieldAt(t.getPosition() + madn_ctrl.Dice.getNumberRolled()).containsFriendlyToken(currentPlayer))
+		  			{
+		  				t.disableToken();
+		 			}
+		  			else
+		 			{
+		  				t.enableToken();
+		   			}
+		 		}
+			}
+		}
+	}
+
+	private boolean areThereTokensOutOfStart()
+	{
+		boolean anyOutOfStart = false;
+		
+		for (Token t:currentPlayer.getTokens())
+		{
+			if (t.isOutOfStart(currentPlayer))
+			{
+				anyOutOfStart = true;
+			}
+		}
+		
+		return anyOutOfStart;
+	}
+	
+	private boolean isAnyTokenEnabled()
+	{
+		boolean b = false;
+		
+		for(Token t: currentPlayer.getTokens())
+		{
+			if (t.isEnabled())
+			{
+				b = true;
+			}
+		}
+		return b;
 	}
 }

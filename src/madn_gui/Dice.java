@@ -31,10 +31,9 @@ public class Dice extends JButton
 			@Override
 			public void actionPerformed(ActionEvent arg0) 
 			{
-				numberRolled = madn_app.Dice.roll();
-				setImage(numberRolled);
-				
-				save();
+				madn_app.Dice.roll();
+				setImage(madn_ctrl.Dice.getNumberRolled());
+		
 				update();
 			}
 		});
@@ -45,12 +44,6 @@ public class Dice extends JButton
         setOpaque(false);
         
         enableDice();
-	}
-	
-	public void save()
-	{
-		madn_ctrl.Dice.setNumberRolled(numberRolled);
-		madn_ctrl.Dice.setDiceRolled(true);
 	}
 	
 	public void update()

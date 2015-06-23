@@ -49,7 +49,6 @@ public class Field
 				wantedToken = t;
 			}
 		}
-		
 		return wantedToken;
 	}
 	

@@ -90,7 +90,6 @@ public class Game
 		//Spiel Loop
 		while (gameOver == false)
 		{
-			
 			//DEBUG: Konsolenausgabe
 			System.out.println("The Current Players is: " + currentPlayer.getName());
 			
@@ -121,7 +120,7 @@ public class Game
 				//Wenn die Nummer nicht 6 ist...
 				if (madn_ctrl.Dice.getNumberRolled() != 6)
 				{
-					//sind Figuren außerhalb des Starts des Spielers?
+					//sind Figuren bewegbar?
 					if (areThereTokensAvailable() == true)
 					{
 						//prüfe, ober der Zug gültig ist
@@ -131,9 +130,11 @@ public class Game
 					}
 					else 
 					{
+						//erhöhe den Failure Counter, wenn keine Figuren bewegbar sind
 						failureCounter++;
 					}
 				}
+				//wenn 6 geworfen wurde
 				else if (madn_ctrl.Dice.getNumberRolled() == 6)
 				{
 					if(areThereTokensAvailable())
@@ -154,7 +155,7 @@ public class Game
 					{
 						if (Board.getFieldAt(currentPlayer.getStartField()).isEmpty())
 						{
-						//erzwinge Bewegung aus der Startposition
+						//ermögliche Bewegung aus der Startposition
 							for (int i:currentPlayer.getStartingPositions())
 							{
 								if (Board.getFieldAt(i).containsToken())
@@ -167,47 +168,48 @@ public class Game
 						{
 							if(Board.getFieldAt(currentPlayer.getStartField() + 6).containsFriendlyToken(currentPlayer))
 							{
-								//DO NOTHING AND ROLL AGAIN
+								//Nichts tun und nochmal würfeln
 							}
 							else
 							{
-								//Force Move to Field
+								//Erzwinge Bewegung aus dem Start
 								Board.getFieldAt(currentPlayer.getStartField()).getTokenOnField().enableToken();
 							}
 						}
 					}
+				}	
+				if (failureCounter > 2)
+				{
+					rollAgain = false;
 				}
-				
-					if (failureCounter > 2)
-					{
-						rollAgain = false;
-					}
-					//if out of all tokens any are enabled wait for Token to be moved else end turn
-					if(isAnyTokenEnabled())
-					{
-						allTokens.setTokenMoved(false);
-						view.update(this);
-						//Wait for Token to be moved
-						while (madn_ctrl.allTokens.wasTokenMoved() == false)
-						{
-							try 
-							{
-						       Thread.sleep(200);
-							} 
-							catch(InterruptedException e) 
-							{
-								e.printStackTrace();
-							}
-						}	
-					}	
+				//Wenn irgendwelche Figuren bewegbar sind...
+				if(isAnyTokenEnabled())
+				{
+					allTokens.setTokenMoved(false);
 					view.update(this);
+					//Warte darauf, dass eine Figur bewegt wird
+					while (madn_ctrl.allTokens.wasTokenMoved() == false)
+					{
+						try 
+						{
+					       Thread.sleep(200);
+						} 
+						catch(InterruptedException e) 
+						{
+							e.printStackTrace();
+						}
+					}	
+				}	
+				view.update(this);
 			}
+			//Wenn ein Haus voll ist, beende Schleife
 			if (isHouseFull())
 			{
 				gameOver = true;
 			}
 			else
 			{
+				//Zug übergeben
 				if (currentPlayer.getID() == 3)
 				{
 					currentPlayer = players.getPlayers().get(0);
@@ -220,9 +222,10 @@ public class Game
 			}
 		}
 		System.out.println("GAME OVER");
-		//zeige Endscreen
+		//Spiel ist vorbei
 	}
 	
+	//überprüft, ob das Haus des momentanen Spielers voll ist
 	private boolean isHouseFull() 
 	{
 		boolean b = true;
@@ -238,6 +241,7 @@ public class Game
 		return b;
 	}
 
+	//überprüfe, ob irgendwelche Tokens aus dem Start und nicht im Haus sind
 	private boolean areThereTokensAvailable() 
 	{
 		boolean b = false;
@@ -258,15 +262,12 @@ public class Game
 	//checkTurn() überprüft, ob ein gültiger Zug möglich ist.	
 	private void checkTurn()
 	{
-		System.out.println("CheckTurn");
 		for (Token t:currentPlayer.getTokens())
 		{
 			if (t.isInHouse() == false) 
 			{
-				System.out.println("isInHouse");
 				if (t.isOutOfStart()) 
 				{
-					System.out.println("isOutOfStart");
 					switch (t.getPlayerID()) 
 					{
 					case 0:
@@ -419,6 +420,7 @@ public class Game
 		}
 	}
 
+	//überprüfe, ob das Feld auf das gezogen wird ein freundliches Token enthält
 	private void checkForFriendlyToken(Token t, int i) 
 	{
 		if (t.getPlayerID() == 0)
@@ -494,6 +496,7 @@ public class Game
 		}
 	}
 	
+	//überprüft, ob irgendwelche Figuren enabled sind
 	private boolean isAnyTokenEnabled()
 	{
 		boolean b = false;
@@ -508,9 +511,9 @@ public class Game
 		return b;
 	}
 
-	public Board getBoard() {
-		return board;
-		
+	public Board getBoard() 
+	{
+		return board;		
 	}
 
 	public Player getCurrentPlayer() 

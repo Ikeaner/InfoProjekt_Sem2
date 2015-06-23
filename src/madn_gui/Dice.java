@@ -14,12 +14,12 @@ import javax.swing.JButton;
 @SuppressWarnings("serial")
 public class Dice extends JButton
 {
-	ImageIcon i1 = new ImageIcon("src\\madn_images\\dice\\dice1.png");
-	ImageIcon i2 = new ImageIcon("src\\madn_images\\dice\\dice2.png");
-	ImageIcon i3 = new ImageIcon("src\\madn_images\\dice\\dice3.png");
-	ImageIcon i4 = new ImageIcon("src\\madn_images\\dice\\dice4.png");
-	ImageIcon i5 = new ImageIcon("src\\madn_images\\dice\\dice5.png");
-	ImageIcon i6 = new ImageIcon("src\\madn_images\\dice\\dice6.png");
+	ImageIcon i1 = new ImageIcon(getClass().getResource("/images/dice1.png"));
+	ImageIcon i2 = new ImageIcon(getClass().getResource("/images/dice2.png"));
+	ImageIcon i3 = new ImageIcon(getClass().getResource("/images/dice3.png"));
+	ImageIcon i4 = new ImageIcon(getClass().getResource("/images/dice4.png"));
+	ImageIcon i5 = new ImageIcon(getClass().getResource("/images/dice5.png"));
+	ImageIcon i6 = new ImageIcon(getClass().getResource("/images/dice6.png"));
 	
 	public Dice()
 	{

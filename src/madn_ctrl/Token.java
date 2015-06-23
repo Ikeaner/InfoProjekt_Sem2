@@ -56,6 +56,56 @@ public class Token
 	}
 
 	public void setPosition(int position) {
+		for (Token t:allTokens.getAllTokens())
+		{
+			if (t.getPosition() == position)
+			{
+				switch(t.getPlayerID())
+				{
+				case 0:
+					for (int i = 56; i < 59; i++)
+					{
+						if(madn_ctrl.Board.getFieldAt(i).containsToken() == false)
+						{
+							t.setPosition(i);
+							break;
+						}
+					}
+					break;
+				case 1:
+					for (int i = 60; i < 63; i++)
+					{
+						if(madn_ctrl.Board.getFieldAt(i).containsToken() == false)
+						{
+							t.setPosition(i);
+							break;
+						}
+					}
+					break;
+				case 2:
+					for (int i = 64; i < 67; i++)
+					{
+						if(madn_ctrl.Board.getFieldAt(i).containsToken() == false)
+						{
+							t.setPosition(i);
+							break;
+						}
+					}
+					break;
+				case 3:
+					for (int i = 68; i < 71; i++)
+					{
+						if(madn_ctrl.Board.getFieldAt(i).containsToken() == false)
+						{
+							t.setPosition(i);
+							break;
+						}
+					}
+					break;
+					
+				}
+			}
+		}
 		this.position = position;
 	}
 

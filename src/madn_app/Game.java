@@ -202,24 +202,42 @@ public class Game
 					}	
 					view.update(this);
 			}
-			//if irgendein Haus = voll
-				//gameOver = true;
-			//else
-			//Zug übergeben
-			if (currentPlayer.getID() == 3)
+			if (isHouseFull())
 			{
-				currentPlayer = players.getPlayers().get(0);
+				gameOver = true;
 			}
 			else
 			{
-				currentPlayer = players.getPlayers().get(currentPlayer.getID()+1);
-			}
+				if (currentPlayer.getID() == 3)
+				{
+					currentPlayer = players.getPlayers().get(0);
+				}
+				else
+				{
+					currentPlayer = players.getPlayers().get(currentPlayer.getID()+1);
+				}
 			view.update(this);
+			}
 		}
-		
+		System.out.println("GAME OVER");
 		//zeige Endscreen
 	}
 	
+	private boolean isHouseFull() 
+	{
+		boolean b = true;
+		
+		for (Token t:currentPlayer.getTokens())
+		{
+			if(t.isInHouse() == false)
+			{
+				b = false;
+			}
+		}
+		
+		return b;
+	}
+
 	private boolean areThereTokensAvailable() 
 	{
 		boolean b = false;

@@ -196,9 +196,4 @@ public class Field extends JButton
 	{
 		ID = iD;
 	}
-	
-	public void update()
-	{
-		
-	}
 }

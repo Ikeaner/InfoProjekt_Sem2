@@ -32,7 +32,7 @@ public class Token
 	
 	public String getStringToOutput()
 	{
-		return "TID" + tokenID + "/PID" + playerID; 
+		return "Figur " + (tokenID+1) + "Spieler " + (playerID+1); 
 	}
 
 	public int getTokenID() {

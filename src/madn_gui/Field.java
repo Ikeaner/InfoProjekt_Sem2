@@ -1,5 +1,6 @@
 package madn_gui;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,6 +20,8 @@ public class Field extends JButton
 		setSize(50, 50);
 		this.setMinimumSize(this.getSize());
 		this.setText(Integer.toString(ID));
+		this.setBackground(new Color(135,206,235));
+		this.setForeground(new Color(25,25,112));
 		this.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) 

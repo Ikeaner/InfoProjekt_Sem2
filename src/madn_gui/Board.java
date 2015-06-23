@@ -17,12 +17,14 @@ public class Board extends JPanel
 	
 	public Board()
 	{
-		this.setSize(1024, 780);
+		this.setSize(800,600);
 		this.setBackground(Color.WHITE);
 		this.setLayout(new GridBagLayout());
 		initFields();
 		
 		orderFields();
+		
+		this.setPreferredSize(this.getSize());
 	}
 	
 	private void orderFields() 
@@ -330,20 +332,22 @@ public class Board extends JPanel
 	{
 		for(Field f: fields)
 		{
-			f.setText(Integer.toString(f.getID()));
+			f.setStandardColor();
 			f.setEnabled(false);
+			f.setText("");
 		}
 		for(Token t:madn_ctrl.allTokens.getAllTokens())
 		{
 			if (t.isEnabled())
 			{
+				fields.get(t.getPosition()).setText("!");
 				fields.get(t.getPosition()).setEnabled(true);
-				fields.get(t.getPosition()).setText(t.getStringToOutput());
+				fields.get(t.getPosition()).setColor(t.getPlayerID());			
 			}
 			else if (t.isEnabled() == false)
 			{
 				fields.get(t.getPosition()).setEnabled(false);
-				fields.get(t.getPosition()).setText(t.getStringToOutput());
+				fields.get(t.getPosition()).setColor(t.getPlayerID());
 			}
 		}
 	}

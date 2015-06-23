@@ -75,8 +75,6 @@ public class Game
 				allTokens.addToken(p.getTokens().get(i));
 			}
 		}
-		//das Spiel ist nun vorbereitet, die view kann zum ersten Mal erneuert werden
-		view.update(this);
 	}
 
 	//startet das Spiel
@@ -87,10 +85,12 @@ public class Game
 		//currentPlayer wird auf den Startspieler gesetzt
 		currentPlayer = players.getPlayers().get(startPlayerInt);
 		System.out.println("Starting Player is: " + currentPlayer.getName());
-		
+		//das Spiel ist nun vorbereitet, die view kann zum ersten Mal erneuert werden
+		view.update(this);
 		//Spiel Loop
 		while (gameOver == false)
 		{
+			
 			//DEBUG: Konsolenausgabe
 			System.out.println("The Current Players is: " + currentPlayer.getName());
 			
@@ -511,5 +511,15 @@ public class Game
 	public Board getBoard() {
 		return board;
 		
+	}
+
+	public Player getCurrentPlayer() 
+	{
+		return currentPlayer; 
+	}
+	
+	public boolean getGameOver()
+	{
+		return gameOver;
 	}
 }

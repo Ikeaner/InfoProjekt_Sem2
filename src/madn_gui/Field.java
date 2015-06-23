@@ -13,15 +13,15 @@ import madn_ctrl.allTokens;
 public class Field extends JButton
 {
 	private int ID;
+	private int[] allHousePositions = {40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55};
+	private int[] allStartingPositions = {56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71};
 	
 	public Field(int i)
 	{
 		ID = i;
 		setSize(50, 50);
-		this.setMinimumSize(this.getSize());
-		this.setText(Integer.toString(ID));
-		this.setBackground(new Color(135,206,235));
-		this.setForeground(new Color(25,25,112));
+		this.setPreferredSize(this.getSize());
+		this.setStandardColor();
 		this.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) 
@@ -198,5 +198,56 @@ public class Field extends JButton
 	public void setID(int iD) 
 	{
 		ID = iD;
+	}
+	
+	public void setStandardColor()
+	{
+		this.setBackground(new Color(135,206,235));
+		this.setForeground(new Color(25,25,112));
+		
+		if(ID == 0 || ID == 10 || ID == 20 || ID == 30)
+		{
+			this.setBackground(Color.DARK_GRAY);
+			this.setForeground(Color.DARK_GRAY);
+		}
+		for(int i:allHousePositions)
+		{
+			if(ID == i)
+			{
+				this.setBackground(Color.LIGHT_GRAY);
+				this.setForeground(Color.LIGHT_GRAY);
+			}
+		}
+		for(int i:allStartingPositions)
+		{
+			if(ID == i)
+			{
+				this.setBackground(Color.DARK_GRAY);
+				this.setForeground(Color.DARK_GRAY);
+			}
+		}
+	}
+
+	public void setColor(int playerID) 
+	{
+		switch(playerID)
+		{
+		case 0: 
+			this.setBackground(Color.GREEN);
+			this.setForeground(Color.RED);
+			break;
+		case 1:
+			this.setBackground(Color.RED);
+			this.setForeground(Color.GREEN);
+			break;
+		case 2:
+			this.setBackground(Color.YELLOW);
+			this.setForeground(new Color(255,0,255));
+			break;
+		case 3:
+			this.setBackground(new Color(255,0,255));
+			this.setForeground(Color.YELLOW);
+			break;
+		}
 	}
 }

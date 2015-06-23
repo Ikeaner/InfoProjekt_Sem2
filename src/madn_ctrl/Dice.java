@@ -1,3 +1,7 @@
+/*
+ * @author Jaqueline Timmermann 
+ * @version 1.0
+ */
 package madn_ctrl;
 
 public class Dice 

@@ -1,7 +1,7 @@
 /*
  *	Die Game Klasse enthält den Spielablauf und Instanzen aller Klassen die das Spiel benötigt.
  * 
- * 	@author Tom Quinders
+ * 	@author Tom Quinders, Jaqueline Timmermann, Anna-Lena Graevingholt
  * 	@version 0.8.1
  */
 package madn_app;

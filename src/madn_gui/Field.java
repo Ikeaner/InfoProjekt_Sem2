@@ -1,3 +1,7 @@
+/*
+ * @author Tom Quinders 
+ * @version 1.0
+ */
 package madn_gui;
 
 import java.awt.Color;
@@ -200,6 +204,7 @@ public class Field extends JButton
 		ID = iD;
 	}
 	
+	//setzt die Farben für die Felder fest.
 	public void setStandardColor()
 	{
 		this.setBackground(new Color(135,206,235));
@@ -228,6 +233,7 @@ public class Field extends JButton
 		}
 	}
 
+	//setzt die Farbe für die Spielfiguren fest
 	public void setColor(int playerID) 
 	{
 		switch(playerID)

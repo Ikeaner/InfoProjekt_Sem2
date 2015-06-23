@@ -1,3 +1,7 @@
+/*
+ * @author Tom Quinders, Anna-Lena Graevingholt
+ * @version 1.0
+ */
 package madn_gui;
 
 import java.awt.Color;

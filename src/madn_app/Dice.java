@@ -5,7 +5,7 @@
  */
 package madn_app;
 
-//returns a random number between 1 and 6
+//gibt eine zufällige Zahl zwischen 1 und 6 zurück
 public class Dice 
 {	
 	public static void roll()

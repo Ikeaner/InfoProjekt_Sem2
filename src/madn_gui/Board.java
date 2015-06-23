@@ -1,3 +1,7 @@
+/*
+ * @author Tom Quinders 
+ * @version 1.0
+ */
 package madn_gui;
 
 import java.awt.Color;
@@ -17,6 +21,7 @@ public class Board extends JPanel
 	
 	public Board()
 	{
+		//bestimmt Größe, Hintergrundfarbe und Layout des Spielfeldes
 		this.setSize(800,600);
 		this.setBackground(Color.WHITE);
 		this.setLayout(new GridBagLayout());
@@ -27,6 +32,7 @@ public class Board extends JPanel
 		this.setPreferredSize(this.getSize());
 	}
 	
+	//weist jedem Feld einen Platz auf dem GridBagLayout zu
 	private void orderFields() 
 	{
 		for (Field f:fields)
@@ -330,6 +336,7 @@ public class Board extends JPanel
 
 	public void update(Game game)
 	{
+		//setze die Farbe für die Felder auf die Standartfarben, diein der Klasse Field bestimmt wurde
 		for(Field f: fields)
 		{
 			f.setStandardColor();
@@ -338,6 +345,7 @@ public class Board extends JPanel
 		}
 		for(Token t:madn_ctrl.allTokens.getAllTokens())
 		{
+			//sorgt dafür dassein ! auf den Token, die ziehbar sind erscheint
 			if (t.isEnabled())
 			{
 				fields.get(t.getPosition()).setText("!");

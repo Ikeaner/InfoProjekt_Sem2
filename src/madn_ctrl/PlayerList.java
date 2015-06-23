@@ -1,3 +1,7 @@
+/*
+ * @author Tom Quinders 
+ * @version 1.0
+ */
 package madn_ctrl;
 
 import java.util.ArrayList;

@@ -1,5 +1,5 @@
 /*
- * @author Tom Quinders | Ikeaner
+ * @author Tom Quinders, Jaqueline Timmermann
  * @version 0.3.1
  */
 
@@ -14,6 +14,7 @@ import javax.swing.JButton;
 @SuppressWarnings("serial")
 public class Dice extends JButton
 {
+	//Bilder die beim Würfel angezeigt werden
 	ImageIcon i1 = new ImageIcon("src\\madn_images\\dice\\dice1.png");
 	ImageIcon i2 = new ImageIcon("src\\madn_images\\dice\\dice2.png");
 	ImageIcon i3 = new ImageIcon("src\\madn_images\\dice\\dice3.png");
@@ -23,7 +24,9 @@ public class Dice extends JButton
 	
 	public Dice()
 	{
+		//setzt als Anfangsbild das Bild mit der 1
 		setImage(1);
+		//wenn der Würfel Button geklickt ist wird die Methode .roll() aufgerufen und es wird gewürfelt
 		this.addActionListener(new ActionListener()
 		{
 			@Override
@@ -44,6 +47,7 @@ public class Dice extends JButton
         enableDice();
 	}
 	
+	//wenn gewürfelt wurde disable dice, sonst enable ihn
 	public void update()
 	{
 		if (madn_ctrl.Dice.isDiceRolled() == true)
@@ -56,6 +60,7 @@ public class Dice extends JButton
 		}
 	}
 	
+	//setzt als Bild die jeweils gewürfelte Zahl
 	private void setImage(int i)
 	{
 		switch (i)
@@ -74,12 +79,12 @@ public class Dice extends JButton
 				break;
 		}
 	}
-	
+	//macht es möglich zu würfeln
 	public void enableDice()
 	{
 		setEnabled(true);
 	}
-	
+	//macht es unmöglich zu würfeln
 	private void disableDice()
 	{
 		setEnabled(false);

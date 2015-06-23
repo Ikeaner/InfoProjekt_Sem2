@@ -1,3 +1,8 @@
+//Die Klasse fügt die erstellten Figuren einer ArrayList hinzu
+/*
+ * @author Tom Quinders 
+ * @version 1.0
+ */ 
 package madn_ctrl;
 
 import java.util.ArrayList;

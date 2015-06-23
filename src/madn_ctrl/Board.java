@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Board 
 {
-	private ArrayList<Field> fields = new ArrayList<Field>();
+	private static ArrayList<Field> fields = new ArrayList<Field>();
 	
 	public Board()
 	{
@@ -14,7 +14,7 @@ public class Board
 		}
 	}
 	
-	public Field getFieldAt(int i)
+	public static Field getFieldAt(int i)
 	{
 		return fields.get(i);
 	}

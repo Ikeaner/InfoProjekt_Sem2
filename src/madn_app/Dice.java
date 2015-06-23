@@ -1,9 +1,7 @@
 /*
+ * Die Dice Klasse in madn_app gibt durch die roll() Methode eine zufällige Nummer zwischen 1 und 6 zurück
  * @author JaceIsOverTheRainbow
  * @version 1.0
- * 
- * dice class
- * use dice.roll() to get a number between 1 and 6
  */
 package madn_app;
 

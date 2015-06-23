@@ -14,8 +14,6 @@ import javax.swing.JButton;
 @SuppressWarnings("serial")
 public class Dice extends JButton
 {
-	private int numberRolled;
-	
 	ImageIcon i1 = new ImageIcon("src\\madn_images\\dice\\dice1.png");
 	ImageIcon i2 = new ImageIcon("src\\madn_images\\dice\\dice2.png");
 	ImageIcon i3 = new ImageIcon("src\\madn_images\\dice\\dice3.png");

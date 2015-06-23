@@ -7,7 +7,7 @@ public class allTokens
 	public static ArrayList<Token> tokens = new ArrayList<Token>();
 	private static boolean tokenMoved;
 	
-	public void addToken(Token t)
+	public static void addToken(Token t)
 	{
 		tokens.add(t);
 	}

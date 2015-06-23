@@ -7,10 +7,32 @@ public class Token
 	private int position;
 	private boolean enabled;
 	
+	private int[] allStartingPositions = {56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71};
+	private int[] allHousePositions = {40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55};
+	
 	public Token(int tokenID, int playerID)
 	{
 		this.setTokenID(tokenID);
 		this.setPlayerID(playerID);
+	}
+	
+	public boolean isInHouse()
+	{
+		boolean b = false;
+		
+		for(int i:allHousePositions)
+		{
+			if (this.position == i)
+			{
+				b = true;
+			}
+		}
+		return b;
+	}
+	
+	public String getStringToOutput()
+	{
+		return "TID" + tokenID + "/PID" + playerID; 
 	}
 
 	public int getTokenID() {
@@ -48,12 +70,30 @@ public class Token
 		enabled = true;
 		
 	}
+	
+	public int getPlayerStart()
+	{
+		int playerStart = 0;
+		
+		switch(playerID)
+		{
+		case 0: playerStart = 0;
+				break;
+		case 1: playerStart = 10;
+				break;
+		case 2: playerStart = 20;
+				break;
+		case 3: playerStart = 30;
+				break;	
+		}
+		return playerStart;
+	}
 
-	public boolean isOutOfStart(Player p) 
+	public boolean isOutOfStart() 
 	{
 		boolean b = true;
 		
-		for(int i:p.getStartingPositions())
+		for(int i:allStartingPositions)
 		{
 			if (this.position == i)
 			{

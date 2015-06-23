@@ -9,7 +9,7 @@ public class Player
 	private ArrayList<Token> tokens = new ArrayList<Token>();
 	private boolean isHuman;
 	private int[] startingPositions = {0,0,0,0};
-	private Field startField;
+	private int startField;
 	
 	public Player(String name, int ID, boolean isHuman)
 	{
@@ -17,32 +17,47 @@ public class Player
 		this.setID(ID);
 		this.setHuman(isHuman);
 		this.setStartingPositions();
+		this.setStartField();
+	}
+	
+	private void setStartField()
+	{
+		switch(ID)
+		{
+		case 0: startField = 0;
+				break;
+		case 1: startField = 10;
+				break;	
+		case 2: startField = 20;
+				break;	
+		case 3: startField = 30;
+				break;	
+		}
 	}
 	
 	private void setStartingPositions() 
 	{
-		//TODO: Find out the actual numbers for the starting positions
 		switch(ID)
 		{
-		case 0: startingPositions[0] = 41;
-				startingPositions[1] = 42;
-				startingPositions[2] = 43;
-				startingPositions[3] = 44;
+		case 0: startingPositions[0] = 56;
+				startingPositions[1] = 57;
+				startingPositions[2] = 58;
+				startingPositions[3] = 59;
 				break;
-		case 1: startingPositions[0] = 45;
-				startingPositions[1] = 46;
-				startingPositions[2] = 47;
-				startingPositions[3] = 48;
+		case 1: startingPositions[0] = 60;
+				startingPositions[1] = 61;
+				startingPositions[2] = 62;
+				startingPositions[3] = 63;
 				break;	
-		case 2: startingPositions[0] = 49;
-				startingPositions[1] = 50;
-				startingPositions[2] = 51;
-				startingPositions[3] = 52;
+		case 2: startingPositions[0] = 64;
+				startingPositions[1] = 65;
+				startingPositions[2] = 66;
+				startingPositions[3] = 67;
 				break;	
-		case 3: startingPositions[0] = 53;
-				startingPositions[1] = 54;
-				startingPositions[2] = 55;
-				startingPositions[3] = 56;
+		case 3: startingPositions[0] = 68;
+				startingPositions[1] = 69;
+				startingPositions[2] = 70;
+				startingPositions[3] = 71;
 				break;	
 		}
 	}
@@ -89,8 +104,13 @@ public class Player
 	{
 		return startingPositions;
 	}
+	
+	public int getStartingPosition(int i)
+	{
+		return startingPositions[i];
+	}
 
-	public Field getStartField() {
+	public int getStartField() {
 		return startField;
 	}
 }

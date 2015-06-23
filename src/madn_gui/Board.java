@@ -1,10 +1,14 @@
 package madn_gui;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
+
+import madn_app.Game;
+import madn_ctrl.Token;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel
@@ -14,11 +18,11 @@ public class Board extends JPanel
 	public Board()
 	{
 		this.setSize(1024, 780);
+		this.setBackground(Color.YELLOW);
 		this.setLayout(new GridBagLayout());
 		initFields();
 		
 		orderFields();
-		
 	}
 	
 	private void orderFields() 
@@ -317,17 +321,31 @@ public class Board extends JPanel
 					c.gridx = 9;
 					c.gridy = 8;
 					break;
-					
-					
 			}
-			
 			add(f,c);
 		}
 	}
 
-	public void update()
+	public void update(Game game)
 	{
-		
+		for(Field f: fields)
+		{
+			f.setText(Integer.toString(f.getID()));
+			f.setEnabled(false);
+		}
+		for(Token t:madn_ctrl.allTokens.getAllTokens())
+		{
+			if (t.isEnabled())
+			{
+				fields.get(t.getPosition()).setEnabled(true);
+				fields.get(t.getPosition()).setText(t.getStringToOutput());
+			}
+			else if (t.isEnabled() == false)
+			{
+				fields.get(t.getPosition()).setEnabled(false);
+				fields.get(t.getPosition()).setText(t.getStringToOutput());
+			}
+		}
 	}
 	
 	public void initFields()
@@ -335,6 +353,11 @@ public class Board extends JPanel
 		for (int i = 0; i < 72; i++)		
 		{
 			fields.add(new Field(i));
+		}
+		
+		for (Field f:fields)
+		{
+			f.setEnabled(false);
 		}
 	}
 }

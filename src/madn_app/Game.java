@@ -1,3 +1,9 @@
+/*
+ *	Die Game Klasse enthält den Spielablauf und Instanzen aller Klassen die das Spiel benötigt.
+ * 
+ * 	@author Tom Quinders
+ * 	@version 0.8.1
+ */
 package madn_app;
 
 import madn_ctrl.Board;
@@ -9,6 +15,8 @@ import madn_gui.View;
 
 public class Game 
 {
+	//Die übergebene view existiert, um view.update() aufzurufen und das GUI zu benachrichtigen,
+	//dass sich Daten im Spiel geändert haben.
 	private View view;
 	
 	private Player p1;
@@ -16,14 +24,12 @@ public class Game
 	private Player p3;
 	private Player p4;
 	private PlayerList players = new PlayerList();
-	
+	//currentPlayer existiert um den Zug an den nächsten Spieler übergeben zu können.
 	private Player currentPlayer;
 	private Board board = new Board();
-	
+	//rollAgain wird benötigt um zu überprüfen, ob man nach einem Zug nochmal würfeln darf.
+	//gameOver kontrolliert die GameLoop. Während gameOver == false ist läuft das Spiel.
 	private boolean rollAgain;
-	
-	Dice d = new Dice();
-	
 	private boolean gameOver = false;
 	
 	public Game(View view)
@@ -34,12 +40,13 @@ public class Game
 		startGame();
 	}
 	
+	//startet ein Spiel mit 4 menschlichen Spielern
 	private void initGame4Players()
 	{
-		p1 = new Player("Spieler", 0, true);
-		p2 = new Player("CPU Tam", 1, false);
-		p3 = new Player("CPU Leno",2, false);
-		p4 = new Player("CPU Jaceu", 3, false);
+		p1 = new Player("Spieler 1", 0, true);
+		p2 = new Player("Spieler 2", 1, true);
+		p3 = new Player("Spieler 3", 2, true);
+		p4 = new Player("Spieler 4", 3, true);
 
 		players.addPlayer(p1);
 		players.addPlayer(p2);
@@ -47,8 +54,10 @@ public class Game
 		players.addPlayer(p4);	
 	}
 	
+	//initialisiert die Spielfiguren für alle Spieler
 	private void initializeTokens()
 	{
+		//erstellt für jeden Spieler 4 Spielfiguren
 		for (Player p : players.getPlayers())
 		{
 			for (int i = 0; i < 4; i++)
@@ -56,30 +65,46 @@ public class Game
 				p.addToken(new Token(i, p.getID()));
 			}
 		}
+		
+		//setzt die Positionen der Figuren auf die Startpositionen des Spielers, fügt die Figuren zu allTokens hinzu
+		for (Player p:players.getPlayers())
+		{
+			for (int i = 0; i < 4 ; i++)
+			{
+				p.getTokens().get(i).setPosition(p.getStartingPosition(i));
+				allTokens.addToken(p.getTokens().get(i));
+			}
+		}
+		//das Spiel ist nun vorbereitet, die view kann zum ersten Mal erneuert werden
+		view.update(this);
 	}
 
+	//startet das Spiel
 	private void startGame()
 	{	
-		//Random Player KANN TODO: Auswürfeln
+		//Bestimmt den Startspieler zufällig
 		int startPlayerInt = (int) (Math.random()*4);
-		//set current Player to the Starting Player
+		//currentPlayer wird auf den Startspieler gesetzt
 		currentPlayer = players.getPlayers().get(startPlayerInt);
 		System.out.println("Starting Player is: " + currentPlayer.getName());
 		
-		//Game Loop
+		//Spiel Loop
 		while (gameOver == false)
 		{
+			//DEBUG: Konsolenausgabe
 			System.out.println("The Current Players is: " + currentPlayer.getName());
 			
-			//Turn Loop
+			//rollAgain wird benötigt um zu sehen ob nach dem momentanen noch ein Zug ausgeführt werden soll
+			//failureCounter wird benötigt um zu sehen, wie oft schon gewürfelt wurde wenn noch keine Figur draußen ist
 			rollAgain = true;
 			int failureCounter = 0;
+			//Zug Loop
 			while (rollAgain == true)
 			{
 				madn_ctrl.Dice.setDiceRolled(false);
 				view.update(this);
 				
-				//Wait for Diceroll
+				//Warte auf den Würfelwurf
 				while (madn_ctrl.Dice.isDiceRolled() == false)
 				{
 					try 
@@ -90,57 +115,70 @@ public class Game
 					{
 						e.printStackTrace();
 					}
-				}				
+				}	
+				//DEBUG: Konsolenausgabe
 				System.out.println("Die gewürfelte Zahl ist " + madn_ctrl.Dice.getNumberRolled());
-				
-					if (madn_ctrl.Dice.getNumberRolled() != 6)
+				//Wenn die Nummer nicht 6 ist...
+				if (madn_ctrl.Dice.getNumberRolled() != 6)
+				{
+					//sind Figuren außerhalb des Starts des Spielers?
+					if (areThereTokensAvailable() == true)
 					{
-						if (areThereTokensOutOfStart() == true)
+						//prüfe, ober der Zug gültig ist
+						checkTurn();
+						//wenn die Zahl nicht 6 ist, soll nicht noch ein Zug ausgeführt werden
+						rollAgain = false;
+					}
+					else 
+					{
+						failureCounter++;
+					}
+				}
+				else if (madn_ctrl.Dice.getNumberRolled() == 6)
+				{
+					if(areThereTokensAvailable())
+					{
+						checkTurn();
+						if(Board.getFieldAt(currentPlayer.getStartField()).containsFriendlyToken(currentPlayer) == false)
 						{
-							checkTurn();
-							rollAgain = false;
-						}
-						else 
-						{
-							failureCounter++;
-							//roll again
+							for (int i:currentPlayer.getStartingPositions())
+							{
+								if (Board.getFieldAt(i).containsToken())
+								{
+									Board.getFieldAt(i).getTokenOnField().enableToken();
+								}
+							}
 						}
 					}
-					else if (madn_ctrl.Dice.getNumberRolled() == 6)
+					else
 					{
-						if(areThereTokensOutOfStart())
+						if (Board.getFieldAt(currentPlayer.getStartField()).isEmpty())
 						{
-							checkTurn();
+						//erzwinge Bewegung aus der Startposition
+							for (int i:currentPlayer.getStartingPositions())
+							{
+								if (Board.getFieldAt(i).containsToken())
+								{
+									Board.getFieldAt(i).getTokenOnField().enableToken();
+								}
+							}
 						}
 						else
 						{
-							if (currentPlayer.getStartField().isEmpty())
+							if(Board.getFieldAt(currentPlayer.getStartField() + 6).containsFriendlyToken(currentPlayer))
 							{
-								//force Move out of Starting Position
-								for (int i:currentPlayer.getStartingPositions())
-								{
-									if (board.getFieldAt(i).containsToken())
-									{
-										board.getFieldAt(i).getTokenOnField().enableToken();
-									}
-								}
+								//DO NOTHING AND ROLL AGAIN
 							}
 							else
 							{
-								if(board.getFieldAt(currentPlayer.getStartField().getID() + 6).containsFriendlyToken(currentPlayer))
-								{
-									//DO NOTHING AND ROLL AGAIN
-								}
-								else
-								{
-									//Force Move to Field
-									currentPlayer.getStartField().getTokenOnField().enableToken();
-								}
+								//Force Move to Field
+								Board.getFieldAt(currentPlayer.getStartField()).getTokenOnField().enableToken();
 							}
 						}
 					}
+				}
 				
-					if (failureCounter < 2)
+					if (failureCounter > 2)
 					{
 						rollAgain = false;
 					}
@@ -162,6 +200,7 @@ public class Game
 							}
 						}	
 					}	
+					view.update(this);
 			}
 			//if irgendein Haus = voll
 				//gameOver = true;
@@ -181,40 +220,260 @@ public class Game
 		//zeige Endscreen
 	}
 	
-	private void checkTurn()
+	private boolean areThereTokensAvailable() 
 	{
+		boolean b = false;
+		
 		for (Token t:currentPlayer.getTokens())
 		{
-			for (int i:currentPlayer.getStartingPositions())
+			if (t.isOutOfStart())
 			{
-				if (t.getPosition() != i)
-		  		{
-		  			if (board.getFieldAt(t.getPosition() + madn_ctrl.Dice.getNumberRolled()).containsFriendlyToken(currentPlayer))
-		  			{
-		  				t.disableToken();
-		 			}
-		  			else
-		 			{
-		  				t.enableToken();
-		   			}
-		 		}
+				if (t.isInHouse() == false)
+				{
+					b = true;
+				}
+			}
+		}
+		return b;
+	}
+
+	//checkTurn() überprüft, ob ein gültiger Zug möglich ist.	
+	private void checkTurn()
+	{
+		System.out.println("CheckTurn");
+		for (Token t:currentPlayer.getTokens())
+		{
+			if (t.isInHouse() == false) 
+			{
+				System.out.println("isInHouse");
+				if (t.isOutOfStart()) 
+				{
+					System.out.println("isOutOfStart");
+					switch (t.getPlayerID()) 
+					{
+					case 0:
+						if (t.getPosition() + madn_ctrl.Dice.getNumberRolled() >= 40) 
+						{
+							switch (t.getPosition() + madn_ctrl.Dice.getNumberRolled()) 
+							{
+							case 40:
+								checkForFriendlyToken(t, 40);
+								break;
+							case 41:
+								checkForFriendlyToken(t, 41);
+								break;
+							case 42:
+								checkForFriendlyToken(t, 42);
+								break;
+							case 43:
+								checkForFriendlyToken(t, 43);
+								break;
+							case 44:
+							case 45:
+								t.disableToken();
+								break;
+							}
+						} 
+						else 
+						{
+							checkForFriendlyToken(t, t.getPosition() + madn_ctrl.Dice.getNumberRolled());
+						}
+						break;
+					///////////////////////////////////////////////////	
+					case 1:
+						if (t.getPosition() < 10) 
+						{
+							if (t.getPosition() + madn_ctrl.Dice.getNumberRolled() >= 10) 
+							{
+								switch (t.getPosition() + madn_ctrl.Dice.getNumberRolled()) 
+								{
+								case 10:
+									checkForFriendlyToken(t, 44);
+									break;
+								case 11:
+									checkForFriendlyToken(t, 45);
+									break;
+								case 12:
+									checkForFriendlyToken(t, 46);
+									break;
+								case 13:
+									checkForFriendlyToken(t, 47);
+									break;
+								case 14:
+								case 15:
+									t.disableToken();
+									break;
+								}
+							} 
+							else 
+							{
+								checkForFriendlyToken(t, t.getPosition()+madn_ctrl.Dice.getNumberRolled());
+							}
+						} 
+						else 
+						{
+							checkForFriendlyToken(t, t.getPosition()+madn_ctrl.Dice.getNumberRolled());
+						}
+						break;
+						///////////////////////////////////////////////////	
+					case 2:
+						if (t.getPosition() < 20) 
+						{
+							if (t.getPosition() + madn_ctrl.Dice.getNumberRolled() >= 20) 
+							{
+								switch (t.getPosition() + madn_ctrl.Dice.getNumberRolled()) 
+								{
+								case 20:
+									checkForFriendlyToken(t, 48);
+									break;
+								case 21:
+									checkForFriendlyToken(t, 49);
+									break;
+								case 22:
+									checkForFriendlyToken(t, 50);
+									break;
+								case 23:
+									checkForFriendlyToken(t, 51);
+									break;
+								case 24:
+								case 25:
+									t.disableToken();
+									break;
+								}
+							} 
+							else 
+							{
+								checkForFriendlyToken(t, t.getPosition()+madn_ctrl.Dice.getNumberRolled());
+							}
+						} 
+						else 
+						{
+							checkForFriendlyToken(t, t.getPosition()+madn_ctrl.Dice.getNumberRolled());
+						}
+						break;
+						///////////////////////////////////////////////////	
+					case 3:
+						if (t.getPosition() < 30) 
+						{
+							if (t.getPosition() + madn_ctrl.Dice.getNumberRolled() >= 30) 
+							{
+								switch (t.getPosition() + madn_ctrl.Dice.getNumberRolled()) 
+								{
+								case 30:
+									checkForFriendlyToken(t, 52);
+									break;
+								case 31:
+									checkForFriendlyToken(t, 53);
+									break;
+								case 32:
+									checkForFriendlyToken(t, 54);
+									break;
+								case 33:
+									checkForFriendlyToken(t, 55);
+									break;
+								case 34:
+								case 35:
+									t.disableToken();
+									break;
+								}
+							} 
+							else 
+							{
+								checkForFriendlyToken(t, t.getPosition()+madn_ctrl.Dice.getNumberRolled());
+							}
+						} 
+						else 
+						{
+							checkForFriendlyToken(t, t.getPosition()+madn_ctrl.Dice.getNumberRolled());
+						}
+					break;
+					}	
+				} 
+				else 
+				{
+					t.disableToken();
+				}
+			}
+			else
+			{
+				t.disableToken();
 			}
 		}
 	}
 
-	private boolean areThereTokensOutOfStart()
+	private void checkForFriendlyToken(Token t, int i) 
 	{
-		boolean anyOutOfStart = false;
-		
-		for (Token t:currentPlayer.getTokens())
+		if (t.getPlayerID() == 0)
 		{
-			if (t.isOutOfStart(currentPlayer))
+			if (Board.getFieldAt(i).containsFriendlyToken(currentPlayer))
 			{
-				anyOutOfStart = true;
+				t.disableToken();
+			}
+			else
+			{
+				t.enableToken();
 			}
 		}
-		
-		return anyOutOfStart;
+		else
+		{
+			if (t.getPosition() > 30)
+			{
+				if(i >= 40)
+				{
+					switch(i)
+					{
+					case 40: 
+						i = 0;
+					break;
+					case 41: 
+						i = 1;
+					break;
+					case 42:
+						i = 2;
+					break;
+					case 43:
+						i = 3;
+					break;
+					case 44:
+						i = 4;
+					break;
+					case 45:
+						i = 5;
+					break;
+					}
+					if (Board.getFieldAt(i).containsFriendlyToken(currentPlayer))
+					{
+						t.disableToken();
+					}
+					else
+					{
+						t.enableToken();
+					}
+				}
+				else
+				{
+					if (Board.getFieldAt(i).containsFriendlyToken(currentPlayer))
+					{
+						t.disableToken();
+					}
+					else
+					{
+						t.enableToken();
+					}
+				}
+			}
+			else
+			{
+				if (Board.getFieldAt(i).containsFriendlyToken(currentPlayer))
+				{
+					t.disableToken();
+				}
+				else
+				{
+					t.enableToken();
+				}
+			}
+		}
 	}
 	
 	private boolean isAnyTokenEnabled()
@@ -229,5 +488,10 @@ public class Game
 			}
 		}
 		return b;
+	}
+
+	public Board getBoard() {
+		return board;
+		
 	}
 }

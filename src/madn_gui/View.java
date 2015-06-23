@@ -30,5 +30,6 @@ public class View
 	{
 		System.out.println("update");
 		d.update();
+		b.update(game);
 	}
 }

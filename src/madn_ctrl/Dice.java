@@ -14,7 +14,6 @@ public class Dice
 	{
 		numberRolled = n;
 	}
-	
 
 	public static boolean isDiceRolled() 
 	{
